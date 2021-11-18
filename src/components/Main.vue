@@ -8,11 +8,11 @@
                         <span class="input-group-text" id="basic-addon3">https://example.com/users/</span>
                         <input type="text" class="form-control" v-model="searchString" id="basic-url" aria-describedby="basic-addon3">
                     </div>
-                    <button class="btn btn-primary" type="button" @click="performCallAPI">Button</button>
+                    <button class="btn btn-primary" type="button" @click="performCallAPI('movie'); performCallAPI('tv')">Button</button>
                 </div>
             </div>
         </div>
-        <DataLoader :queryData="data"></DataLoader>
+        <DataLoader :queryMovieData="movieData" :queryTvData="tvData"></DataLoader>
     </main>
 </template>
 <script>
@@ -24,24 +24,25 @@ export default {
     data(){
         return {
             searchString : undefined,
-            url : 'https://api.themoviedb.org/3/search/tv',
+            url : 'https://api.themoviedb.org/3/search/',
             token : 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NDZiOTBiOTc3MzE4ZWE0YmYyNmZmNzVlMWIxZTcxNiIsInN1YiI6IjYxOTRkMWMwM2UwOWYzMDAyYzg3MWQ5ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.fqwWcWyQxrFrPVPOJtZuQPUYcoZ4QEvT38ET-Aj5gs0',
-            data : []
+            movieData : [],
+            tvData : []
         }
     },
     methods : {
-        performCallAPI(){
-            axios.get(`${this.url}?language=it_IT&query=` + this.searchString, { 'headers': {
+        performCallAPI(category){
+            axios.get(`${this.url}${category}?language=it_IT&query=` + this.searchString, { 'headers': {
                         Authorization : `Bearer ${this.token}`, 
                         'Content-Type': 'application/json' } 
             }).then((response) => {
                 console.log(response.data.results)
-                this.data.push(...response.data.results)
+                if(category === 'movie')
+                    this.movieData.push(...response.data.results)
+                else
+                    this.tvData.push(...response.data.results)
             });
         }
-    },
-    mounted(){
-        this.performCallAPI()
     }
 }
 </script>
