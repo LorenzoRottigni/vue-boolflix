@@ -4,10 +4,10 @@
             <div :key="index" v-for="(element, index) in data" 
             class="card-container row d-flex justify-content-start flex-nowrap px-0 mb-5 py-6 overflow-auto" :id="element.id">
             <h1>{{element.category}} <span class="text-white" v-if="element.queryString != 'null'">{{element.queryString}}</span> <span class="text-white" v-if="(element.frequence != '')">{{'of the ' + element.frequence}}</span></h1>
-                <span class="slide-controller-left" @click="scrollSlider('left')"> <i class="fa fa-angle-double-left"></i> </span>
+                <span class="slide-controller-left" @click="scrollSlider('left',index)"> <i class="fa fa-angle-double-left"></i> </span>
                 
                 <div class="ratio-2x1 movie-card d-flex flex-column justify-content-end p-0 overflow-auto"
-                 :key="i" v-for="(data, i) in data[index].content"
+                 :key="'card-' + i" v-for="(data, i) in data[index].content"
                  :style="{ backgroundImage: 'url(' + imgUrl + data.poster_path + ')' }"
                  @click="displayInfo(index, i)">
                     <div class="movie-card-body bg-dark h-75 text-white py-3 px-2 d-flex flex-column justify-content-around"
@@ -31,7 +31,7 @@
                         
                     </div>
                 </div>
-                <span class="slide-controller-right shadow" @click="scrollSlider('right')"> <i class="fa fa-angle-double-right"></i> </span>
+                <span class="slide-controller-right shadow" @click="scrollSlider('right', index)"> <i class="fa fa-angle-double-right"></i> </span>
             </div>
             <!--
             <div class="card-container row d-flex justify-content-start flex-nowrap py-5 px-0 overflow-auto">
@@ -97,16 +97,15 @@ export default{
         getStars(n){
             return parseInt(n/2)
         },
-        scrollSlider(direction){
-            const scrollableContainer = document.querySelector('.card-container')
+        scrollSlider(direction, i){
+            const scrollableContainer = document.querySelector(`#${this.data[i].id}`)
             if(direction === 'right'){
-                this.scrollCounter++
-                scrollableContainer.scrollLeft = window.innerWidth * this.scrollCounter
+                this.data[i].scrollPosition++
+                scrollableContainer.scrollLeft = window.innerWidth * this.data[i].scrollPosition
             }else{
-                if(this.scrollCounter>0)
-                    this.scrollCounter--
-                
-                scrollableContainer.scrollLeft = window.innerWidth * this.scrollCounter
+                if(this.data[i].scrollPosition>0)
+                    this.data[i].scrollPosition--
+                scrollableContainer.scrollLeft = window.innerWidth * this.data[i].scrollPosition
             }
             
         },
@@ -190,6 +189,8 @@ export default{
             color: white
             font-size: 28px
             z-index: 99
+            i
+                transition: 0.5s
         .slide-controller-right
             right: 0
             border-top-left-radius: 15px

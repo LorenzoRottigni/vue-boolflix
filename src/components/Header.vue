@@ -7,10 +7,12 @@
                 </div>
                 <div class="col-8 d-flex flex-column align-items-center justify-content-center">
                     <ul class="list-unstyled w-100 gap-5 d-flex justify-content-center ap-3">
-                        <li><a href="#trending-Series-week">Best TV of this week</a></li>
-                        <li><a href="#trending-Movies-week">Best movies of this week</a></li>
-                        <li><a href="#trending-Series-week">TVs of the day</a></li>
-                        <li><a href="#trending-Series-day">Movies of the day</a></li>
+                        <li><a href="#trending-Movies-day">Movies of the day</a></li>
+                        <li><a href="#trending-Series-day">Series of the day</a></li>
+                        <li><a href="#trending-Movies-week">Best movies of the week</a></li>
+                        <li><a href="#trending-Series-week">Best series of the week</a></li>
+
+
                     </ul>
                     <div class="input-group">
                         <button class="btn btn-outline-danger" type="button" 
@@ -65,6 +67,7 @@ export default {
                     category : category,
                     queryString : this.searchString,
                     frequence : frequence,
+                    scrollPosition : 0,
                     id : `${type}-${category}-${this.searchString}${frequence}`
                 })
                 this.$emit('data', this.data)
