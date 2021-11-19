@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="container-fluid">
-            <div :key="index" v-for="(element, index) in data" 
+            <div :key="'card-container-' + index" v-for="(element, index) in data" 
             class="card-container row d-flex justify-content-start flex-nowrap px-0 mb-5 py-6 overflow-auto" :id="element.id">
             <h1>{{element.category}} <span class="text-white" v-if="element.queryString != 'null'">{{element.queryString}}</span> <span class="text-white" v-if="(element.frequence != '')">{{'of the ' + element.frequence}}</span></h1>
                 <span class="slide-controller-left" @click="scrollSlider('left',index)"> <i class="fa fa-angle-double-left"></i> </span>
