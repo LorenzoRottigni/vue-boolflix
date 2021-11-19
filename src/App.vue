@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <Main @movies="setMovieData" @tvs="setTvData"></Main>
-    <DataLoader :queryMovieData="movieData" :queryTvData="tvData"></DataLoader>
+    <!--<Main @movies="setMovieData" @tvs="setTvData"></Main>-->
+    <Main @data="setData"></Main>
+    <!--<DataLoader :queryMovieData="movieData" :queryTvData="tvData"></DataLoader>-->
+    <DataLoader :data="data"></DataLoader>
   </div>
 </template>
 
@@ -17,7 +19,8 @@ export default {
   data(){
     return {
       movieData : [],
-      tvData : []
+      tvData : [],
+      data: []
     }
   },
   methods : {
@@ -26,6 +29,9 @@ export default {
     },
     setTvData(data){
       this.tvData = data
+    },
+    setData(data){
+      this.data = data
     }
   }
 }

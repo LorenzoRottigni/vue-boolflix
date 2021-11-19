@@ -1,22 +1,50 @@
 <template>
     <div>
         <div class="container-fluid">
-            <div class="card-container row d-flex justify-content-start flex-nowrap py-5 px-0 overflow-auto">
+            <div :key="index" v-for="(element, index) in data" 
+            class="card-container row d-flex justify-content-start flex-nowrap px-0 py-5 overflow-auto">
+            <h1>{{element.category}} {{element.queryString}}</h1>
                 <span class="slide-controller-left" @click="scrollSlider('left')"> (:- </span>
-                <div class="ratio-2x1 movie-card" :key="data.id" v-for="data in queryMovieData"
-                 :style="{ backgroundImage: 'url(' + imgUrl + data.poster_path + ')' }">
+                
+                <div class="ratio-2x1 movie-card d-flex flex-column justify-content-end p-0 overflow-auto"
+                 :key="i" v-for="(data, i) in data[index].content"
+                 :style="{ backgroundImage: 'url(' + imgUrl + data.poster_path + ')' }"
+                 @mouseenter="displayInfo(index, i)" @mouseleave="displayInfo(index, i)">
+                    <div class="movie-card-body bg-dark h-75 text-white py-3 px-2 d-flex flex-column justify-content-around"
+                     v-if="data.displayStatus" >
+                        <div class="movie-card-body-top flex-grow-1 overflow-auto ">
+                            <h5 class="card-title">{{data.name}}</h5>
+                            <p class="card-text">{{data.overview}}</p>
+                        </div>
+                        <ul class="list-group list-group-flush rounded my-3">
+                            <li class="list-group-item">Popularity: {{data.popularity}}</li>
+                            <li class="list-group-item">Vote count: {{data.popularity}} </li>
+                            <li class="list-group-item d-flex align-items-center gap-1">
+                                Vote average: <i class="fa fa-star" :key="index" v-for="(star, index) in parseInt(data.vote_average/2)"></i>
+                            </li>
+                        </ul>
+                        <div class="d-flex justify-content-between">
+                            <img width="50px" :src="getFlagIcon(data.original_language)" :alt="data.name">
+                            <h6 class="text-secondary mt-3">{{data.release_date}}</h6>
+                        </div>
+                        
+                    </div>
                 </div>
                 <span class="slide-controller-right shadow" @click="scrollSlider('right')"> -:) </span>
             </div>
+            <!--
             <div class="card-container row d-flex justify-content-start flex-nowrap py-5 px-0 overflow-auto">
                 <span class="slide-controller-left" @click="scrollSlider('left')"> (:- </span>
                 <div class="ratio-2x1 movie-card" :key="data.id" v-for="data in queryTvData"
                  :style="{ backgroundImage: 'url(' + imgUrl + data.poster_path + ')' }">
                 </div>
                 <span class="slide-controller-right shadow" @click="scrollSlider('right')"> -:) </span>
-            </div>
+            </div>-->
         </div>
-        <div class="container-fluid">  <!-- Our project just needs Font Awesome solid + brand -->
+
+
+        <!--
+        <div class="container-fluid">  
             <div class="row d-flex flex-wrap justify-content-center gap-5 py-5">
                 <div class="card col-5" style="width: 18rem;"  :key="data.id" v-for="data in queryData">
                     <img :src="imgUrl + data.poster_path" :alt="data.name" class="card-img-top">
@@ -37,7 +65,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
     
 </template>
@@ -48,6 +76,7 @@ export default{
     props : {
         queryMovieData : Array,
         queryTvData : Array,
+        data : Array
     },
     data(){
         return {
@@ -79,14 +108,14 @@ export default{
                 scrollableContainer.scrollLeft = window.innerWidth * this.scrollCounter
             }
             
+        },
+        displayInfo(i, id){
+            if(this.data[i].content[id].displayStatus){
+                this.data[i].content[id].displayStatus = false
+            }else{
+                this.data[i].content[id].displayStatus = true
+            }
         }
-    },
-    computed:{
-        queryData(){
-            const data = this.queryMovieData.concat(this.queryTvData)
-            return data
-        }
-        
     }
     
 }
@@ -103,14 +132,28 @@ export default{
     i
         color: gold
     .ratio-2x1
-        width: calc(100vw / 3)
-        height: calc((100vw / 3) * 2) 
+        width: calc(100vw / 4)
+        height: calc((100vw / 4) * 2) 
     .movie-card
         background-color: rgba(255,255,255,0.6)
+        background-repeat: no-repeat
+        background-size: cover
+        .movie-card-body
+            transition: 2s
+        ul
+            li
+                background-color: $bg-danger
+                color: white
+
     .card-container
         background-color: #1b1b1b
         scroll-behavior: smooth
         position: relative
+        h1
+            position: absolute
+            top: 0
+            left: 10px
+            color: $bg-danger
         .slide-controller-right, .slide-controller-left
             position: sticky
             top: 50%
@@ -123,6 +166,7 @@ export default{
             justify-content: center
             color: white
             font-size: 32px
+            z-index: 99
         .slide-controller-right
             right: 0
             border-top-left-radius: 15px
