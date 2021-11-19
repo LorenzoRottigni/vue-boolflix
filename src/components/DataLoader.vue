@@ -2,7 +2,7 @@
     <div>
         <div class="container-fluid">
             <div :key="index" v-for="(element, index) in data" 
-            class="card-container row d-flex justify-content-start flex-nowrap px-0 py-6 overflow-auto" :id="element.id">
+            class="card-container row d-flex justify-content-start flex-nowrap px-0 mb-5 py-6 overflow-auto" :id="element.id">
             <h1>{{element.category}} <span class="text-white" v-if="element.queryString != 'null'">{{element.queryString}}</span> <span class="text-white" v-if="(element.frequence != '')">{{'of the ' + element.frequence}}</span></h1>
                 <span class="slide-controller-left" @click="scrollSlider('left')"> <i class="fa fa-angle-double-left"></i> </span>
                 
@@ -127,7 +127,7 @@ export default{
     @import './../styles/variables'
     .py-6
         padding-top: 5rem
-        padding-bottom: 3rem
+        padding-bottom: 1rem
     .card-body .card-text
         max-height: 200px
         overflow: auto
@@ -145,6 +145,8 @@ export default{
         background-color: rgba(255,255,255,0.6)
         background-repeat: no-repeat
         background-size: cover
+        border-top: solid 2px $bg-danger
+        border-bottom: solid 2px $bg-danger
         .movie-card-body
             transition: 1s
         ul
@@ -155,6 +157,19 @@ export default{
     .card-container
         background-color: #1b1b1b
         scroll-behavior: smooth
+        /* width */
+        &::-webkit-scrollbar 
+            width: 3px
+        /* Track */
+        &::-webkit-scrollbar-track
+            background-color: transparent
+        /* Handle */
+        &::-webkit-scrollbar-thumb 
+            background: $bg-danger
+            border-radius: 15px
+        /* Handle on hover */
+        &::-webkit-scrollbar-thumb:hover
+            background: lightgray
         position: relative
         h1
             position: absolute
@@ -166,14 +181,14 @@ export default{
             position: sticky
             top: 50%
             transform: translateY(-50%)
-            width: 60px
-            height: 120px
+            width: 50px
+            height: 100px
             background-color: $bg-danger
             display: flex
             align-items: center
             justify-content: center
             color: white
-            font-size: 32px
+            font-size: 28px
             z-index: 99
         .slide-controller-right
             right: 0

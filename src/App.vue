@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="pb-5">
     <!--<Header @movies="setMovieData" @tvs="setTvData"></Header>-->
     <Header @data="setData"></Header>
     <!--<DataLoader :queryMovieData="movieData" :queryTvData="tvData"></DataLoader>-->
@@ -44,4 +44,5 @@ export default {
 
 #app
  background-color: #1b1b1b 
+
 </style>

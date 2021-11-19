@@ -96,4 +96,5 @@ export default {
             background-color: $bg-danger
             border-color: $bg-danger
             color: white
+    
 </style>
