@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <!--<Main @movies="setMovieData" @tvs="setTvData"></Main>-->
-    <Main @data="setData"></Main>
+    <!--<Header @movies="setMovieData" @tvs="setTvData"></Header>-->
+    <Header @data="setData"></Header>
     <!--<DataLoader :queryMovieData="movieData" :queryTvData="tvData"></DataLoader>-->
     <DataLoader :data="data"></DataLoader>
   </div>
@@ -9,12 +9,12 @@
 
 <script>
 import DataLoader from './components/DataLoader'
-import Main from './components/Main'
+import Header from './components/Header'
 export default {
   name: 'App',
   components: {
     DataLoader,
-    Main,
+    Header,
   },
   data(){
     return {
@@ -41,4 +41,7 @@ export default {
 @import '~font-awesome/css/font-awesome.min.css'
 @import '~bootstrap/scss/bootstrap'
 @import './styles/variables'
+
+#app
+ background-color: #1b1b1b 
 </style>

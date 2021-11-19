@@ -2,16 +2,16 @@
     <div>
         <div class="container-fluid">
             <div :key="index" v-for="(element, index) in data" 
-            class="card-container row d-flex justify-content-start flex-nowrap px-0 py-5 overflow-auto">
-            <h1>{{element.category}} {{element.queryString}}</h1>
-                <span class="slide-controller-left" @click="scrollSlider('left')"> (:- </span>
+            class="card-container row d-flex justify-content-start flex-nowrap px-0 py-6 overflow-auto" :id="element.id">
+            <h1>{{element.category}} <span class="text-white" v-if="element.queryString != 'null'">{{element.queryString}}</span> <span class="text-white" v-if="(element.frequence != '')">{{'of the ' + element.frequence}}</span></h1>
+                <span class="slide-controller-left" @click="scrollSlider('left')"> <i class="fa fa-angle-double-left"></i> </span>
                 
                 <div class="ratio-2x1 movie-card d-flex flex-column justify-content-end p-0 overflow-auto"
                  :key="i" v-for="(data, i) in data[index].content"
                  :style="{ backgroundImage: 'url(' + imgUrl + data.poster_path + ')' }"
-                 @mouseenter="displayInfo(index, i)" @mouseleave="displayInfo(index, i)">
+                 @click="displayInfo(index, i)">
                     <div class="movie-card-body bg-dark h-75 text-white py-3 px-2 d-flex flex-column justify-content-around"
-                     v-if="data.displayStatus" >
+                     :class="(data.displayStatus) ? 'opacity-1' : 'opacity-0'">
                         <div class="movie-card-body-top flex-grow-1 overflow-auto ">
                             <h5 class="card-title">{{data.name}}</h5>
                             <p class="card-text">{{data.overview}}</p>
@@ -21,16 +21,17 @@
                             <li class="list-group-item">Vote count: {{data.popularity}} </li>
                             <li class="list-group-item d-flex align-items-center gap-1">
                                 Vote average: <i class="fa fa-star" :key="index" v-for="(star, index) in parseInt(data.vote_average/2)"></i>
+                                <i class="fa fa-star text-white" :key="index" v-for="(star, index) in (5 - parseInt(data.vote_average/2))"></i>
                             </li>
                         </ul>
                         <div class="d-flex justify-content-between">
-                            <img width="50px" :src="getFlagIcon(data.original_language)" :alt="data.name">
+                            <img width="50px" :src="getFlagIcon(data.original_language)" :alt="data.original_language + '-flag'">
                             <h6 class="text-secondary mt-3">{{data.release_date}}</h6>
                         </div>
                         
                     </div>
                 </div>
-                <span class="slide-controller-right shadow" @click="scrollSlider('right')"> -:) </span>
+                <span class="slide-controller-right shadow" @click="scrollSlider('right')"> <i class="fa fa-angle-double-right"></i> </span>
             </div>
             <!--
             <div class="card-container row d-flex justify-content-start flex-nowrap py-5 px-0 overflow-auto">
@@ -124,13 +125,19 @@ export default{
 
 <style scoped lang="sass">
     @import './../styles/variables'
+    .py-6
+        padding-top: 5rem
+        padding-bottom: 3rem
     .card-body .card-text
         max-height: 200px
         overflow: auto
     img
         vertical-align: middle
-    i
+    i[class="fa fa-star"]
         color: gold
+    i[class="fa fa-angle-double-left"], i[class="fa fa-angle-double-right"]
+        color: white
+        font-size: 48px
     .ratio-2x1
         width: calc(100vw / 4)
         height: calc((100vw / 4) * 2) 
@@ -139,7 +146,7 @@ export default{
         background-repeat: no-repeat
         background-size: cover
         .movie-card-body
-            transition: 2s
+            transition: 1s
         ul
             li
                 background-color: $bg-danger
@@ -154,6 +161,7 @@ export default{
             top: 0
             left: 10px
             color: $bg-danger
+            z-index: 200
         .slide-controller-right, .slide-controller-left
             position: sticky
             top: 50%
