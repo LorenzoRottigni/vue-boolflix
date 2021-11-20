@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="container-fluid">
+<<<<<<< HEAD
             <div :key="'card-container-'+index" v-for="(element, index) in data" >
                 <h1>{{element.category}} <span class="text-white" v-if="element.queryString != 'null'">{{element.queryString}}</span> <span class="text-white" v-if="(element.frequence != '')">{{'of the ' + element.frequence}}</span></h1>
                 <div class="card-container row d-flex justify-content-start flex-nowrap px-0 mb-5 py-4 overflow-auto" :id="element.id">
@@ -28,6 +29,34 @@
                                 <img width="50px" :src="getFlagIcon(data.original_language)" :alt="data.original_language + '-flag'">
                                 <h6 class="text-secondary mt-3">{{data.release_date}}</h6>
                             </div>
+=======
+            <div :key="'card-container-' + index" v-for="(element, index) in data" 
+            class="card-container row d-flex justify-content-start flex-nowrap px-0 mb-5 py-6 overflow-auto" :id="element.id">
+            <h1>{{element.category}} <span class="text-white" v-if="element.queryString != 'null'">{{element.queryString}}</span> <span class="text-white" v-if="(element.frequence != '')">{{'of the ' + element.frequence}}</span></h1>
+                <span class="slide-controller-left" @click="scrollSlider('left',index)"> <i class="fa fa-angle-double-left"></i> </span>
+                
+                <div class="ratio-2x1 movie-card d-flex flex-column justify-content-end p-0 overflow-auto"
+                 :key="'card-' + i" v-for="(data, i) in data[index].content"
+                 :style="{ backgroundImage: 'url(' + imgUrl + data.poster_path + ')' }"
+                 @click="displayInfo(index, i)">
+                    <div class="movie-card-body bg-dark h-75 text-white py-3 px-2 d-flex flex-column justify-content-around"
+                     :class="(data.displayStatus) ? 'opacity-1' : 'opacity-0'">
+                        <div class="movie-card-body-top flex-grow-1 overflow-auto ">
+                            <h5 class="card-title">{{data.name}}</h5>
+                            <p class="card-text">{{data.overview}}</p>
+                        </div>
+                        <ul class="list-group list-group-flush rounded my-3">
+                            <li class="list-group-item">Popularity: {{data.popularity}}</li>
+                            <li class="list-group-item">Vote count: {{data.popularity}} </li>
+                            <li class="list-group-item d-flex align-items-center gap-1">
+                                Vote average: <i class="fa fa-star" :key="index" v-for="(star, index) in parseInt(data.vote_average/2)"></i>
+                                <i class="fa fa-star text-white" :key="index" v-for="(star, index) in (5 - parseInt(data.vote_average/2))"></i>
+                            </li>
+                        </ul>
+                        <div class="d-flex justify-content-between">
+                            <img width="50px" :src="getFlagIcon(data.original_language)" :alt="data.original_language + '-flag'">
+                            <h6 class="text-secondary mt-3">{{data.release_date}}</h6>
+>>>>>>> 402b4f7b6a768e5875960d0301eeaf8a4c5f4f2b
                         </div>
                     </div>
                     <span class="slide-controller-right shadow" @click="scrollSlider('right', index)"> <i class="fa fa-angle-double-right"></i> </span>
