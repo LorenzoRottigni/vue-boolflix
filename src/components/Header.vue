@@ -11,77 +11,110 @@
                         <li><a href="#trending-Series-day">Series of the day</a></li>
                         <li><a href="#trending-Movies-week">Best movies of the week</a></li>
                         <li><a href="#trending-Series-week">Best series of the week</a></li>
-
-
                     </ul>
                     <div class="input-group">
                         <button class="btn btn-outline-danger" type="button" 
-                        @click="performCallAPI('search','movie',''); performCallAPI('search','tv','')"><i class="fa fa-search"></i></button>
+                        @click="filterCallAPI()"><i class="fa fa-search"></i></button>
                         <input type="text" class="form-control" placeholder="search" v-model="searchString" aria-label="Example text with button addon" aria-describedby="button-addon1">
                     </div>
+                    <div class="d-flex gap-5 mt-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input bg-danger" type="checkbox" role="switch" id="movies-checkbox" @click="toggleMovieFilter" checked>
+                            <label class="form-check-label" for="movies-checkbox">Movies</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input bg-danger" type="checkbox" role="switch" id="series-checkbox" @click="toggleTvFilter" checked>
+                            <label class="form-check-label" for="series-checkbox">Series</label>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
     </main>
 </template>
+
 <script>
-import axios from 'axios'
 
+    import axios from 'axios'
 
-export default {
-    name : 'Header',
-    data(){
-        return {
-            searchString : '',
-            url : 'https://api.themoviedb.org/3/',
-            token : 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NDZiOTBiOTc3MzE4ZWE0YmYyNmZmNzVlMWIxZTcxNiIsInN1YiI6IjYxOTRkMWMwM2UwOWYzMDAyYzg3MWQ5ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.fqwWcWyQxrFrPVPOJtZuQPUYcoZ4QEvT38ET-Aj5gs0',
-            movieDataApi : [],
-            tvDataApi : [],
-            data : []
-        }
-    },
-    methods : {
-        performCallAPI(type, category, frequence){
-            let APIurl
-            if(type === 'trending'){
-                APIurl = `${this.url}${type}/${category}/${frequence}`
-            }else{
-                APIurl = `${this.url}${type}/${category}?language=it_IT&query=${this.searchString}`
+    export default {
+        name : 'Header',
+        data(){
+            return {
+                searchString : '',
+                url : 'https://api.themoviedb.org/3/',
+                token : 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NDZiOTBiOTc3MzE4ZWE0YmYyNmZmNzVlMWIxZTcxNiIsInN1YiI6IjYxOTRkMWMwM2UwOWYzMDAyYzg3MWQ5ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.fqwWcWyQxrFrPVPOJtZuQPUYcoZ4QEvT38ET-Aj5gs0',
+                movieDataApi : [],
+                tvDataApi : [],
+                data : [],
+                tvFilter : true,
+                movieFilter : true
             }
-            axios.get(APIurl, { 'headers': {
-                        Authorization : `Bearer ${this.token}`, 
-                        'Content-Type': 'application/json' } 
-            }).then((response) => {
-                if(category === 'tv')
-                    category = 'Series'
-                else if(category === 'movie')
-                    category = 'Movies'
-                const results = response.data.results
-                for (const key in results) {
-                    console.log(results[key])
-                    results[key].displayStatus = false;
+        },
+        methods : {
+            performCallAPI(type, category, frequence){
+                let APIurl
+                if(type === 'trending'){
+                    APIurl = `${this.url}${type}/${category}/${frequence}`
+                }else{
+                    APIurl = `${this.url}${type}/${category}?language=it_IT&query=${this.searchString}`
                 }
-                this.data.unshift({
-                    content : results,
-                    type : type,
-                    category : category,
-                    queryString : this.searchString,
-                    frequence : frequence,
-                    scrollPosition : 0,
-                    id : `${type}-${category}-${this.searchString}${frequence}`
-                })
-                this.$emit('data', this.data)
-            });
+
+                axios.get(APIurl, { 'headers': {
+                            Authorization : `Bearer ${this.token}`, 
+                            'Content-Type': 'application/json' } 
+                }).then((response) => {
+                    if(category === 'tv')
+                        category = 'Series'
+                    else if(category === 'movie')
+                        category = 'Movies'
+                    const results = response.data.results
+                    for (const key in results) {
+                        console.log(results[key])
+                        results[key].displayStatus = false;
+                    }
+                    this.data.unshift({
+                        content : results,
+                        type : type,
+                        category : category,
+                        queryString : this.searchString,
+                        frequence : frequence,
+                        scrollPosition : 0,
+                        id : `${type}-${category}-${this.searchString}${frequence}`
+                    })
+                    this.$emit('data', this.data)
+                });
+            },
+            toggleMovieFilter(){
+                if(this.movieFilter)
+                    this.movieFilter = false
+                else
+                    this.movieFilter = true
+            },
+            toggleTvFilter(){
+                if(this.tvFilter)
+                    this.tvFilter = false
+                else
+                    this.tvFilter = true
+            },
+            filterCallAPI(){
+                if(this.tvFilter)
+                    this.performCallAPI('search','tv','')
+                if(this.movieFilter)
+                    this.performCallAPI('search','movie',''); 
+                
+            }
+        },
+        mounted(){
+            this.performCallAPI('trending','tv','week')
+            this.performCallAPI('trending','movie','week')
+            this.performCallAPI('trending','tv','day')
+            this.performCallAPI('trending','movie','day')
         }
-    },
-    mounted(){
-        this.performCallAPI('trending','tv','week')
-        this.performCallAPI('trending','movie','week')
-        this.performCallAPI('trending','tv','day')
-        this.performCallAPI('trending','movie','day')
     }
-}
 </script>
+
 <style scoped lang="sass">
     @import './../styles/variables'
     main
@@ -99,5 +132,8 @@ export default {
             background-color: $bg-danger
             border-color: $bg-danger
             color: white
+    input.bg-danger
+        background-color: $bg-danger !important
+        border-color: $bg-danger !important
     
 </style>
